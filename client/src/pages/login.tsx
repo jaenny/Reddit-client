@@ -1,9 +1,29 @@
+import Axios from "axios";
 import Link from "next/link";
-import React from "react";
+import React, { FormEvent, useState } from "react";
 import InputGroup from "../components/InputGroup";
 
 const Login = () => {
-	const handleSubmit = () => {};
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+	const [errors, setErrors] = useState<any>({});
+
+	const handleSubmit = async (event: FormEvent) => {
+		event.preventDefault();
+		try {
+			const res = await Axios.post(
+				"/auth/login",
+				{
+					username,
+					password,
+				},
+				{ withCredentials: true }
+			);
+		} catch (error: any) {
+			console.log(error);
+			setErrors(error.response.data || {});
+		}
+	};
 	return (
 		<div className="bg-white">
 			<div className="flex flex-col items-center justify-content h-screen p-6">

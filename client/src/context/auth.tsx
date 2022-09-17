@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useContext, useReducer } from "react";
 import { User } from "../types/type";
 
 interface State {
@@ -44,13 +44,22 @@ const StateContext = createContext<State>({
 
 const DispatchContext = createContext<any>({});
 
+export const useAuthState = () => useContext(StateContext);
+export const useAuthDispatch = () => useContext(DispatchContext);
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-	const [state, dispatch] = useReducer(reducer, {
+	const [state, defaultDispatch] = useReducer(reducer, {
 		// initialValue
 		user: null,
 		authenticated: false,
 		loading: true,
 	});
+
+	console.log("state", state);
+
+	const dispatch = (type: string, payload?: any) => {
+		defaultDispatch({ type, payload });
+	};
 	return (
 		<DispatchContext.Provider value={dispatch}>
 			<StateContext.Provider value={state}>{children}</StateContext.Provider>
